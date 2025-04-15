@@ -1,309 +1,637 @@
-\documentclass{beamer}
-\usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage{verbatim}  % for including code
-\usepackage{tikz}
-\usepackage{pgfpages} % for handout mode (if desired)
+\documentclass[aspectratio=1610]{beamer}
+\usepackage[T1]{fontenc}
+\usetheme{wildcat}
+
+\usepackage{amsmath,amssymb,amsfonts}
+%\usepackage{booktabs}
+\usepackage{relsize}
+\setbeamertemplate{caption}[numbered]
+
+
+\newsavebox{\mybox}
+
+
 \usepackage[export]{adjustbox}
-\usepackage{verbatim}
-
-%\usepackage{utopia}
-
-
+\usepackage{environ}
+\usepackage{fancyvrb}
 \usepackage{listings}
 \lstset{%
-  basicstyle=\small\ttfamily,
-  language=[LaTeX]{TeX}
+  basicstyle=\small\ttfamily\color{wcprimary},
+  language=[LaTeX]{TeX},
+  backgroundcolor=\color{white},
+  xleftmargin=0.1cm,
+  rulecolor=\color{wcprimary},
+  frame=single,
+  aboveskip=7pt,
+  %framesep=8pt,
+  %framerule=1pt
 }
-% For nicer code formatting you might consider packages like listings or minted.
-%\usepackage{listings}
-%\lstset{basicstyle=\tiny\ttfamily,breaklines=true}
 
-\title{\LaTeX 101}
-\subtitle{Basics for Graduate Students}
+\usepackage[style=verbose,backend=biber]{biblatex}
+\addbibresource{references.bib}
+\let\oldfootnotesize\footnotesize
+\renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
+
+\def\mathdefault#1{#1}
+\everymath=\expandafter{\the\everymath\displaystyle}
+
+% Define a new environment 'splitframe'
+\NewEnviron{splitframe}[1]{%
+  \begin{frame}[fragile]{#1}
+    \begin{columns}[T]
+      % Left column: Display S(L) using fancyvrb’s Verbatim.
+      \column{0.50\textwidth}
+        \begin{Verbatim}
+\BODY
+        \end{Verbatim}
+      % Right column: Execute L.
+      \column{0.50\textwidth}
+\BODY
+    \end{columns}
+  \end{frame}
+}
+
+
+\title{\LaTeX{} 101 \\ {\small ME 800 Seminar}}
+\date{April 15, 2025}
 \author{Jeremy Roberts}
-\institute{Kansas State University}
-\date{\today}
 
 \begin{document}
 
-\frame{\titlepage}
+\begin{frame}
+  \titlepage
+\end{frame}
 
-%% ---------------------------------------------------------------------
-%% 1. Standalone Documents
-%% ---------------------------------------------------------------------
+\section{Standalone \LaTeX{} Documents}
 
-\begin{frame}[fragile]{1.a. Default, Barebones Document}
-  \begin{columns}[t]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{A Barebones Document}
+  \begin{columns}[T]
+
     \column{0.50\textwidth}
-    %\verbatiminput{example_article.tex}
-    \lstinputlisting[frame=single]{example_article.tex}
 
-%       \textbf{Source: example\_article.tex}
-%       \begin{verbatim}
-% \documentclass{article}
-% \begin{document}
-%   Hello, world! This is a
-%   barebones LaTeX article.
-% \end{document}
-%       \end{verbatim}
-    \column{0.48\textwidth}
+      \lstinputlisting[]{example_article.tex}
 
-      %\textbf{Output:}
-      % Ensure you compile example_article.tex and save its output
-    %  \includegraphics[width=\textwidth]{example_article.pdf}
-      \includegraphics[width=\textwidth,frame]{example_article.pdf}% tight frame
+      \vspace{0.25cm}
+
+      \raggedleft {\it Shown above is the \textcolor{wcprimary}{plain-text, LaTeX source}.  At right is
+      the compiled PDF, and below, a zoomed view of the PDF.}
+
+      \vspace{0.25cm}
+
+      \includegraphics[width=1.01\textwidth, trim={5cm 22cm 8cm 3cm},
+                       clip, frame]{example_article.pdf}
+
+
+    \column{0.50\textwidth}
+      %  trim={<left> <lower> <right> <upper>}
+
+      \includegraphics[width=0.9\textwidth, frame]{example_article.pdf}
 
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{1.b. Lorem Ipsum Document}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Source: example\_lorem.tex}
-      \begin{verbatim}
-% example_lorem.tex
-\documentclass{article}
-\usepackage{lipsum}
-\begin{document}
-\lipsum[1-2]
-\end{document}
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Output:}
-      \includegraphics[width=\textwidth]{example_lorem.pdf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{The Preamble and some {\it Lorem Ipsum}}
+  \begin{columns}[T]
+
+    \column{0.50\textwidth}
+
+      \lstinputlisting{example_lorem.tex}
+
+      \raggedleft {\small\it The default fonts come from the Computer Modern family invented by
+      Donald Knuth, who also invented the low-level, great-for-math
+      typesetting language \TeX{}.}
+
+    \column{0.50\textwidth}
+      %  trim={<left> <lower> <right> <upper>}
+
+      \includegraphics[width=0.9\textwidth, frame]{example_lorem.pdf}
+
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{1.c. Journal Template Example}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Source: example\_journal.tex}
-      \begin{verbatim}
-% example_journal.tex
-\documentclass[twocolumn]{revtex4-2}
-\begin{document}
-\title{A Sample Journal Article}
-\author{Author Name}
-\date{\today}
-\maketitle
-\begin{abstract}
-This is a sample abstract for a journal article.
-\end{abstract}
-\section{Introduction}
-Sample text here.
-\end{document}
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Output:}
-      \includegraphics[width=\textwidth]{example_journal_output.pdf}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Tweaking Formats}
+  \begin{columns}[T]
+
+    \column{0.50\textwidth}
+
+      \lstinputlisting{example_formatting.tex}
+      \raggedleft {\small\it \LaTeX{} is a higher-level markup language
+      built on \TeX{} that simplifies document preparation by providing structured commands and environments for formatting.}
+
+    \column{0.50\textwidth}
+      %  trim={<left> <lower> <right> <upper>}
+
+      \includegraphics[width=0.9\textwidth, frame]{example_formatting.pdf}
+
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{1.d. Thesis Template Example}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Source: example\_thesis.tex}
-      \begin{verbatim}
-% example_thesis.tex
-\documentclass[12pt]{report}
-\begin{document}
-\title{A Sample Thesis Title}
-\author{Your Name}
-\date{\today}
-\maketitle
-\chapter{Introduction}
-This is the introduction.
-\chapter{Literature Review}
-Here is the literature review.
-\end{document}
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Output:}
-      \includegraphics[width=\textwidth]{example_thesis_output.pdf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{A Journal Article}
+  \begin{columns}[T]
+
+    \column{0.50\textwidth}
+
+      \vspace{-5pt}
+
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily\color{wcprimary}]{example_journal.tex}
+
+      \raggedleft {\it Many templates and classes available!}
+
+    \column{0.50\textwidth}
+
+      %  trim={<left> <lower> <right> <upper>}
+      \includegraphics[width=0.9\textwidth, frame]{example_journal.pdf}
+
   \end{columns}
 \end{frame}
 
-%% ---------------------------------------------------------------------
-%% 2. Core Structures
-%% ---------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Thesis Support}
 
-\begin{frame}[fragile]{2. Core Structures: Titles, Sections, Lists, and More}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Source: example\_core\_structures.tex}
-      \begin{verbatim}
-% example_core_structures.tex
-\documentclass{article}
-\begin{document}
-\title{Core Structures Example}
-\author{Author}
-\date{\today}
-\maketitle
+  \begin{columns}[T]
 
-\section{Sections}
-This is a section.
+    \column{0.55\textwidth}
 
-\subsection{Subsection}
-This is a subsection.
+      \begin{itemize}
+      \item An official \LaTeX{} template is available for K-State theses and dissertations:\\
+          \url{https://www.k-state.edu/grad/academics/etdr/template/}
+      \item A video tutorial is available:\\
+          \url{https://youtu.be/XyiD893gpR4}
+      \item The template is also available on Overleaf!
+      \end{itemize}
 
-\section{Lists}
+    \column{0.45\textwidth}
+
+      \includegraphics[width=0.99\textwidth, frame]{example_thesis.pdf}
+
+  \end{columns}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Core \LaTeX{} Structures}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Lists and Enumerations}
+  \begin{columns}[T]
+
+    \column{0.50\textwidth}
+
+\begin{lstlisting}
+Unumbered lists of items:
 \begin{itemize}
-   \item First item
-   \item Second item
+   \item First level item
+   \item First level item
+   \begin{itemize}
+     \item Second level item
+     \item Second level item
+   \end{itemize}
 \end{itemize}
 
-\section{Equations}
-Inline: $E=mc^2$ and display:
-\[
-\int_a^b f(x)\,dx
-\]
+Numbered lists:
+\begin{enumerate}
+    \item Item one
+    \item Item two
+\end{enumerate}
+\end{lstlisting}
 
-\section{Tables}
-\begin{tabular}{lcr}
-Item & Description & Price\\
-Apple & Fruit & \$1.00\\
-Banana & Fruit & \$0.50\\
-\end{tabular}
+    \column{0.50\textwidth}
 
-\section{Figures}
-\begin{figure}[h]
-\centering
-%\includegraphics[width=0.5\textwidth]{sample-figure.jpg}
-\caption{Sample figure caption.}
+ \vbox to .7\textheight{%
+
+Unumbered lists of items:
+\begin{itemize}
+   \item First level item 1
+   \item First level item 2
+
+   \begin{itemize}
+     \item Second level item 1
+     \item Second level item 2
+   \end{itemize}
+\end{itemize}
+
+
+Numbered lists:
+\begin{enumerate}
+    \item Item 1
+    \item Item 2
+\end{enumerate}
+
+
+
+\raggedleft {\it Use white space (breaks and indentation) to improve readability
+of \LaTeX{}.}
+}
+  \end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Figures}
+  \begin{columns}[T]
+
+    \column{0.50\textwidth}
+
+\begin{lstlisting}
+\begin{figure}[h] # [htbp!H]
+ \includegraphics{smile.png}
+ \caption{A doodle.}
+\end{figure}
+\end{lstlisting}
+
+    \column{0.50\textwidth}
+
+\begin{figure}[t]
+ \centering
+ \includegraphics[width=\textwidth]{smile.png}
+ \caption{A doodle.}
 \end{figure}
 
-\end{document}
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Output:}
-      \includegraphics[width=\textwidth]{example_core_structures_output.pdf}
+\raggedleft {\it For best resolution, avoid
+rasterized images.}
+
+  \end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Basic Equations}
+  \begin{columns}[T]
+    % Left column: S(L)
+    \column{0.50\textwidth}
+      \begin{lstlisting}
+Inline math is writing an
+equation like $E=mc^2$ as
+part of a sentence, while
+we can offset math by
+$$ % or \[
+  I = \int_a^b f(x) dx \, .
+$$ % and \]
+Equations can be numbered like
+\begin{equation}
+ E = mc^2
+ \label{eq:einstein}
+\end{equation}
+and referenced as
+Eq.~(\ref{eq:einstein}). They
+can also be unnumbered, like
+\begin{equation*}
+  I = \int_a^b f(x) dx \, .
+\end{equation*}
+      \end{lstlisting}
+    % Right column: L (the block executed)
+    \column{0.50\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Inline math is writing an
+equation like $E=mc^2$ as
+part of a sentence, while
+we can offset math by
+$$ % or \[
+  I = \int_a^b f(x) dx \, .
+$$ % and \]
+Equations can be numbered like
+\begin{equation}
+ E = mc^2
+ \label{eq:einstein}
+\end{equation}
+and referenced as
+Eq.~(\ref{eq:einstein}). They
+can also be unnumbered, like
+\begin{equation*}
+  I = \int_a^b f(x) dx \, .
+\end{equation*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \end{columns}
 \end{frame}
 
-%% ---------------------------------------------------------------------
-%% 3. Core Math
-%% ---------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Mathematical Symbols}
+  \begin{columns}[T]
+    % Left column: S(L)
+    \column{0.50\textwidth}
 
-\begin{frame}[fragile]{3. Core Math: Symbols, Operators, Matrices, Cases}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Source: example\_core\_math.tex}
-      \begin{verbatim}
-% example_core_math.tex
-\documentclass{article}
-\usepackage{amsmath,amssymb}
-\begin{document}
-\section{Math Examples}
+\begin{lrbox}{\mybox}%
+    \begin{lstlisting}[basicstyle=\footnotesize\ttfamily\color{wcprimary}]
+\begin{math}
+\begin{array}{ccccc}
+\alpha  & \beta   & \pi       & \Phi      & \zeta   \\
+\sum    & \prod   & \int      & \partial  & \nabla  \\
+\vec{x} & \hat{x} & \dot{x}   & \tilde{x} & \bar{x} \\
+\in     & \notin  & \subset   & \subseteq & \cup    \\
+\leq    & \geq    & \approx   & \equiv    & \neq    \\
+\forall & \exists & \emptyset & \infty    & \angle  \\
+\mathrm{X} & \mathbf{X} & \mathbb{X} & \mathcal{X}
+& \mathfrak{X} \\
+\boldsymbol{\pi} & & & & \\
+\end{array}
+\end{math}
+    \end{lstlisting}
+\end{lrbox}
+\scalebox{1.2}{\usebox{\mybox}}
 
-Inline math: $\alpha,\ \beta,\ \Gamma,\ \delta$.
+    % Right column: L (the block executed)
+    \column{0.25\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{math}
+\begin{array}{ccccc}
+\alpha  & \beta   & \pi       & \Phi      & \zeta   \\
+\sum    & \prod   & \int      & \partial  & \nabla  \\
+\vec{x} & \hat{x} & \dot{x}   & \tilde{x} & \bar{x} \\
+\in     & \notin  & \subset   & \subseteq & \cup    \\
+\leq    & \geq    & \approx   & \equiv    & \neq    \\
+\forall & \exists & \emptyset & \infty    & \angle  \\
+\mathrm{X} & \mathbf{X} & \mathbb{X} & \mathcal{X}
+& \mathfrak{X} \\
+\boldsymbol{\pi} & & & & \\
+\end{array}
+\end{math}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \end{columns}
+  \vfill
+{\small\it See more at \url{https://en.wikibooks.org/wiki/LaTeX/Mathematics}}!
+\end{frame}
 
-Display math:
-\[
-\lim_{x\to\infty}\frac{1}{x}=0.
-\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Aligned Equations}
+  \begin{columns}[T]
+% Left column: S(L)
+    \column{0.50\textwidth}
+      \begin{lstlisting}
+Equations sometimes require
+multiple lines like
+\begin{equation}
+ \begin{split}
+  (a+1)x + by &= c \\
+      dx + ey &= f \, ,
+ \end{split}
+\end{equation}
+where the {\tt \&=} horizontally
+aligns the equations at the $=$
+symbol.  Equivalently,
+\begin{align}
+  (a+1)x + by &= c \\
+      dx + ey &= f \, .
+\end{align}
+      \end{lstlisting}
+    \column{0.50\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Equations sometimes require
+multiple lines like
+\begin{equation}
+ \begin{split}
+  (a+1)x + by &= c \\
+      dx + ey &= f \, ,
+ \end{split}
+\end{equation}
+where the {\tt \&=} horizontally
+aligns the equations at the $=$
+symbol.  Equivalently,
+\begin{align}
+  (a+1)x + by &= c \\
+      dx + ey &= f \, .
+\end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\raggedleft {\it Align equations in
+the \LaTeX{} source for easier revisions.}
+  \end{columns}
+\end{frame}
 
-Matrix:
-\[
-\begin{matrix}
-a & b \\
-c & d
-\end{matrix}
-\]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Tables}
+  \begin{columns}[T]
+    \column{0.60\textwidth}
+      \begin{lstlisting}
+\begin{table}[h]
+  \centering
+  \caption{Fruit Prices}
+  \begin{tabular}{|l|c|r|}
+    \hline
+  {\bf Item} & {\bf Price} &
+                  {\bf Quantity} \\
+    \hline
+      Apple  & \$1.00 & 10       \\
+      Banana & \$0.50 & 20       \\
+    \hline
+  \end{tabular}
+  \label{tbl:fruit}
+\end{table}
 
-Cases:
-\[
+See Table~\ref{tbl:fruit} for
+fruit prices.
+      \end{lstlisting}
+    \column{0.40\textwidth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[h]
+  \centering
+  \caption{Fruit Prices}
+  \begin{tabular}{|l|c|r|}
+    \hline
+      {\bf Item} & {\bf Price}  & {\bf Quantity} \\
+    \hline
+      Apple  & \$1.00 & 10       \\
+      Banana & \$0.50 & 20       \\
+    \hline
+  \end{tabular}
+  \label{tbl:fruit}
+\end{table}
+
+See Table~\ref{tbl:fruit} for
+fruit prices.
+
+\vspace{1cm}
+
+\raggedleft {\it The package {\tt booktabs}
+provides tables that can be more attractive,
+while {\tt longtable} allows tables to span
+multiple pages.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \end{columns}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Matrices}
+  \begin{columns}[T]
+    \column{0.50\textwidth}
+      \begin{lstlisting}
+Matrices have many forms:
+\begin{align*}
+ \begin{array}{cc} a & b\\ c & d
+   \end{array} & \quad
+ \begin{smallmatrix}a & b\\ c & d
+   \end{smallmatrix} \\
+  & \begin{matrix} a & b \\ c & d
+   \end{matrix} \quad
+ \begin{bmatrix} a & b \\ c & d
+   \end{bmatrix} & \\
+ \begin{pmatrix} a & b \\ c & d
+   \end{pmatrix} & \quad
+ \begin{Bmatrix} a & b \\ c & d
+   \end{Bmatrix} \\
+ \begin{vmatrix} a & b \\ c & d
+   \end{vmatrix} \quad
+ \begin{Vmatrix} a & b \\ c & d
+   \end{Vmatrix} & \\
+\end{align*}
+      \end{lstlisting}
+    \column{0.50\textwidth}
+Matrices have many forms:
+\begin{align*}
+ \begin{array}{cc} a & b\\ c & d
+   \end{array} & \quad
+ \begin{smallmatrix}a & b\\ c & d
+   \end{smallmatrix} \\
+  & \begin{matrix} a & b \\ c & d
+   \end{matrix} \quad
+ \begin{bmatrix} a & b \\ c & d
+   \end{bmatrix} & \\
+ \begin{pmatrix} a & b \\ c & d
+   \end{pmatrix} & \quad
+ \begin{Bmatrix} a & b \\ c & d
+   \end{Bmatrix} \\
+ \begin{vmatrix} a & b \\ c & d
+   \end{vmatrix} \quad
+ \begin{Vmatrix} a & b \\ c & d
+   \end{Vmatrix} & \\
+\end{align*}
+  \end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{...and some more math!}
+  \begin{columns}[T]
+    \column{0.65\textwidth}
+      \begin{lstlisting}
+$$
 f(x)=
 \begin{cases}
-x^2, & x\ge0, \\
--x^2, & x<0.
+x^2,   & \text{if } x \ge 0, \\
+-x^2,  & \text{if } x < 0.
 \end{cases}
-\]
-\end{document}
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Output:}
-      \includegraphics[width=\textwidth]{example_core_math_output.pdf}
+$$
+$$
+\frac{n!}{k!(n-k)!} = \binom{n}{k}
+$$
+$$
+( \big[ \Big \{ \bigg | \Bigg ( \qquad
+\left (\frac{1}{\frac{1}{1+x}+1} \right )
+$$
+$$
+\overbrace{-\nabla D \nabla \phi
+ \Sigma_t \phi(\mathbf{r})}^{losses}
+  + \overbrace{S(\mathbf{r})}^{gains}
+$$
+      \end{lstlisting}
+    \column{0.35\textwidth}
+$$
+f(x)=
+\begin{cases}
+x^2,   & \text{if } x \ge 0, \\
+-x^2,  & \text{if } x < 0.
+\end{cases}
+$$
+$$
+\frac{n!}{k!(n-k)!} = \binom{n}{k}
+$$
+$$
+( \big[ \Big \{ \bigg | \Bigg ( \qquad
+\left (\frac{1}{\frac{1}{1+x}+1} \right )
+$$
+$$
+\overbrace{-\nabla D \nabla \phi +
+ \Sigma_t \phi(\mathbf{r})}^{losses}
+  = \overbrace{S(\mathbf{r})}^{gains}
+$$
   \end{columns}
 \end{frame}
 
-%% ---------------------------------------------------------------------
-%% 4. Use in Other Contexts
-%% ---------------------------------------------------------------------
+\section{Where Else Is \LaTeX{} Useful?}
 
-\begin{frame}[fragile]{4. Use in Other Contexts}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Jupyter Markdown Example (example\_jupyter.md)}
-      \begin{verbatim}
-<!-- example_jupyter.md -->
-# Jupyter Markdown with LaTeX
-
-Inline math: $a^2+b^2=c^2$
-
-Displayed math:
-
-$$
-\sum_{n=1}^{\infty}\frac{1}{n^2}=\frac{\pi^2}{6}
-$$
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Notes:}\\
-      In Jupyter, this Markdown renders math using MathJax.
-      % You might show a screenshot of a rendered notebook.
-      \includegraphics[width=\textwidth]{example_jupyter_output.pdf}
-  \end{columns}
-
-  \vspace{1ex}
-  \textbf{Other:}\\
-  \textbf{Word / Canvas Equations:}
-  In Word or Canvas, you can often insert LaTeX‐like equations using built–in editors. For example, type
-  \verb|$E=mc^2$| to render an equation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Environments with (some) \LaTeX{} Support}
+\begin{itemize}
+ \item Jupyter Notebook: Markdown cells support inline math (\$...\$)
+  and display math (\$\$...\$\$) via MathJax.
+ \item GitHub: README files and issues support LaTeX via MathJax.
+ \item StackExchange: Sites like Math.SE support LaTeX.
+ \item Canvas supports LaTeX.
+ \item Word's equation editor supports LaTeX.
+\end{itemize}
 \end{frame}
 
-%% ---------------------------------------------------------------------
-%% 5. Presentations: Beamer and Posters
-%% ---------------------------------------------------------------------
+\begin{frame}[fragile]{Presentations with Beamer}
+ \begin{columns}[T]
 
-% \begin{frame}[fragile]{5. Presentations: Beamer Example}
-%   \begin{columns}[t]
-%     \column{0.48\textwidth}
-%       \textbf{Source: example\_beamer.tex}
-%       \begin{verbatim}
-% % example_beamer.tex
-% \documentclass{beamer}
-% \begin{document}
-% \begin{frame}{Sample Slide}
-% This is an example slide using Beamer.
-% \end{frame}
-% \end{document}
-%       \end{verbatim}
-%     \column{0.48\textwidth}
-%       \textbf{Output:}
-%       \includegraphics[width=\textwidth]{example_beamer_output.pdf}
+    \column{0.50\textwidth}
+
+      \lstinputlisting[]{example_beamer.tex}
+
+
+    \column{0.50\textwidth}
+
+      \includegraphics[width=0.9\textwidth, frame]{example_beamer.pdf}
+
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Posters with Tikzposter}
+ \begin{columns}[T]
+
+    \column{0.50\textwidth}
+
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily\color{wcprimary}]{example_poster.tex}
+
+
+    \column{0.50\textwidth}
+
+      \includegraphics[width=0.8\textwidth, frame]{example_poster.pdf}
+
+  \end{columns}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \centering
+  \Huge Questions?
+\end{frame}
+
+% https://www.texifier.com/docs/tutorials/tex/advanced/tex-vs-latex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}[fragile]{Bibliography and References}
+%   \begin{columns}[T]
+%     \column{0.50\textwidth}
+%       \begin{lstlisting}
+% See \cite{lamport1994latex} for LaTeX basics.
+%
+% \section{Introduction}\label{sec:intro}
+%
+% Refer to Section~\ref{sec:intro} for more details.
+%
+% \printbibliography
+%       \end{lstlisting}
+%     \column{0.50\textwidth}
+% See \cite{lamport1994latex} for LaTeX basics.
+%
+% \section{Introduction}\label{sec:intro}
+%
+% Refer to Section~\ref{sec:intro} for more details.
+%
+% \printbibliography
 %   \end{columns}
 % \end{frame}
 
-\begin{frame}[fragile]{5. Presentations: Poster Example}
-  \begin{columns}[t]
-    \column{0.48\textwidth}
-      \textbf{Source: example\_poster.tex}
-      \begin{verbatim}
-% example_poster.tex
-\documentclass{tikzposter}
-\begin{document}
-\title{Sample Poster Title}
-\author{Your Name}
-\maketitle
-\block{Introduction}{
-This is the introduction block of the poster.
-}
-\end{document}
-      \end{verbatim}
-    \column{0.48\textwidth}
-      \textbf{Output:}
-      \includegraphics[width=\textwidth]{example_poster_output.pdf}
-  \end{columns}
-\end{frame}
+
 
 \end{document}
+
