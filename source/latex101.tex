@@ -27,7 +27,7 @@
   %framerule=1pt
 }
 
-\usepackage[style=verbose,backend=biber]{biblatex}
+\usepackage[style=numeric,backend=biber]{biblatex}
 \addbibresource{references.bib}
 \let\oldfootnotesize\footnotesize
 \renewcommand*{\footnotesize}{\oldfootnotesize\tiny}
@@ -553,6 +553,38 @@ $$
   \end{columns}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]{Bibliography and References}
+
+  \begin{columns}[T]
+    \column{0.5\textwidth}
+      \begin{lstlisting}
+See \cite{lamport1994latex} or
+\cite{shultis1994latex} for
+LaTeX basics.
+
+\printbibliography
+      \end{lstlisting}
+    \column{0.5\textwidth}
+
+See \cite{lamport1994latex} or
+\cite{shultis1994latex} for
+LaTeX basics.
+
+\printbibliography
+
+  \end{columns}
+
+This is driven by
+\begin{verbatim}
+  \usepackage[style=numeric,backend=biber]{biblatex}
+  \addbibresource{references.bib}
+\end{verbatim}
+in the preamble.  Start a .bib file and keep
+it updated for your work!
+
+\end{frame}
+
 \section{Where Else Is \LaTeX{} Useful?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -580,6 +612,9 @@ $$
       \includegraphics[width=0.9\textwidth, frame]{example_beamer.pdf}
 
   \end{columns}
+\vfill
+This (my!) presentation uses Beamer and this template:
+\url{https://www.overleaf.com/latex/templates/wildcat/knynymwgrxxj}
 \end{frame}
 
 
@@ -607,29 +642,7 @@ $$
 
 % https://www.texifier.com/docs/tutorials/tex/advanced/tex-vs-latex
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{frame}[fragile]{Bibliography and References}
-%   \begin{columns}[T]
-%     \column{0.50\textwidth}
-%       \begin{lstlisting}
-% See \cite{lamport1994latex} for LaTeX basics.
-%
-% \section{Introduction}\label{sec:intro}
-%
-% Refer to Section~\ref{sec:intro} for more details.
-%
-% \printbibliography
-%       \end{lstlisting}
-%     \column{0.50\textwidth}
-% See \cite{lamport1994latex} for LaTeX basics.
-%
-% \section{Introduction}\label{sec:intro}
-%
-% Refer to Section~\ref{sec:intro} for more details.
-%
-% \printbibliography
-%   \end{columns}
-% \end{frame}
+
 
 
 
